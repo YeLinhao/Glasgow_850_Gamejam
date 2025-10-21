@@ -21,7 +21,7 @@ public class CubeThrower : MonoBehaviour
     void Throw()
     {
         // 实例化要投掷的物体
-        GameObject thrownObject = Instantiate(objectToThrow, throwPoint.position, throwPoint.rotation * Quaternion.Euler(-90, 0, 0));
+        GameObject thrownObject = Instantiate(objectToThrow, throwPoint.position, throwPoint.rotation);
 
         // 获取刚体组件
         Rigidbody rb = thrownObject.GetComponent<Rigidbody>();
