@@ -10,11 +10,25 @@ public class PlayerInputManager : MonoBehaviour
 
     private HashSet<Gamepad> joinedGamepads = new HashSet<Gamepad>();
 
+    private bool wasdJoined = false;
 
 
     // Update is called once per frame
     void Update()
     {
+        if (Keyboard.current == null) return;
+        if (!wasdJoined && Keyboard.current.enterKey.wasPressedThisFrame)
+        {
+            var player = PlayerInput.Instantiate(playerPrefab,
+                    controlScheme: "WASD",
+                    pairWithDevice: Keyboard.current);
+
+            if (spawnPoints.Length > 0)
+            {
+                player.transform.position = spawnPoints[joinedGamepads.Count].position;
+            }
+            wasdJoined = true;
+        }
         foreach (var gamePad in Gamepad.all)
         {
             if (gamePad.buttonSouth.wasPressedThisFrame && !joinedGamepads.Contains(gamePad))
