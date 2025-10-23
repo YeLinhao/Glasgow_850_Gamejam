@@ -1,28 +1,38 @@
+using Mono.Cecil.Cil;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private InteractionZone interactionZone;
+    [SerializeField] private Transform holdPoint;
     [SerializeField] private Rigidbody rb;
+
+    [Header("Movement Settings")]
     [SerializeField] private float speed = 10f;
     [SerializeField] private float dashSpeed = 20f;
     [SerializeField] private float gravity = -9.8f;
     [SerializeField] private float turnSpeed = 360;
+
 
     private CharacterController controller;
     private Vector2 moveInput;
     private Vector3 velocity;
     private Vector3 move;
 
-    private bool holdingObject = true;
+    private bool holdingObject = false;
     private bool canDash;
     private bool isDashing;
 
     public float dashForce;
     public float dashDuration;
-    
-    
+
+    private IPickupable heldObject;
+
+
 
     void Awake()
     {
@@ -36,24 +46,35 @@ public class PlayerController : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
-        if (holdingObject)
+        if (heldObject != null)
         {
             if (context.performed)
             {
                 speed = speed / 4;
-                // Collect start time
+                // TODO Collect start time
             }
             if (context.action.WasReleasedThisFrame())
             {
                 speed = speed * 4;
-                // if object is throwable then throw here with power = duration held
-                
+                // TODO throw with power = duration held
+                Vector3 force = transform.forward * 5f;
+                (heldObject as PickupableItem)?.OnDrop(force);
+                heldObject = null;
+
             }
+        }
+        else if (interactionZone.currentPickupable != null)
+        {
+            // Pick up nearby object
+            heldObject = interactionZone.currentPickupable;
+            heldObject.OnPickup(holdPoint);
+            interactionZone.currentPickupable = null;
         }
         else
         {
-            //Check for object in front arc, if object is grabbable then grab object
+            Debug.Log("No pickupable object in range");
         }
+           
         
     }
 
