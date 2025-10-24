@@ -159,5 +159,6 @@ public class PlayerController : MonoBehaviour
         Look();
         Vector3 moveDirection = transform.forward * move.magnitude * speed * Time.deltaTime;
         controller.Move(moveDirection);
+        controller.Move(Vector3.up * gravity * Time.deltaTime);
     }
 }
