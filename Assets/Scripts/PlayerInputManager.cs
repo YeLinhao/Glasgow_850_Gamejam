@@ -37,10 +37,16 @@ public class PlayerInputManager : MonoBehaviour
                     controlScheme: "Gamepad",
                     pairWithDevice: gamePad);
 
-
+                
                 if (spawnPoints.Length > 0)
                 {
+                    // Get the CharacterController component
+                    CharacterController controller = player.GetComponent<CharacterController>();
+
+                    // Place the player at the spawn point
+                    controller.enabled = false; // temporarily disable to safely set position
                     player.transform.position = spawnPoints[joinedGamepads.Count].position;
+                    controller.enabled = true; // re-enable before using Move
                 }
                 joinedGamepads.Add(gamePad);
             }
