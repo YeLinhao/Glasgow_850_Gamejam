@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
         {
             // Pick up nearby object
             heldObject = interactionZone.currentPickupable;
-            heldObject.OnPickup(holdPoint);
+            heldObject.OnPickup(holdPoint, controller);
             interactionZone.currentPickupable = null;
         }
         else

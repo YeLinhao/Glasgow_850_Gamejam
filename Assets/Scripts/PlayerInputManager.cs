@@ -8,6 +8,8 @@ public class PlayerInputManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform[] spawnPoints;
 
+
+
     private HashSet<Gamepad> joinedGamepads = new HashSet<Gamepad>();
 
     private bool wasdJoined = false;
@@ -27,7 +29,7 @@ public class PlayerInputManager : MonoBehaviour
             {
                 // Get the CharacterController component
                 CharacterController controller = player.GetComponent<CharacterController>();
-
+                GameManager.instance.AddPlayer(controller);
                 // Place the player at the spawn point
                 controller.enabled = false; // temporarily disable to safely set position
                 player.transform.position = spawnPoints[joinedGamepads.Count].position;
@@ -48,6 +50,7 @@ public class PlayerInputManager : MonoBehaviour
                 {
                     // Get the CharacterController component
                     CharacterController controller = player.GetComponent<CharacterController>();
+                    GameManager.instance.AddPlayer(controller);
 
                     // Place the player at the spawn point
                     controller.enabled = false; // temporarily disable to safely set position
