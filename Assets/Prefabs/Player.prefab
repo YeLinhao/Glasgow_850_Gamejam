@@ -311,11 +311,15 @@ MonoBehaviour:
   holdPoint: {fileID: 2108264017449634367}
   rb: {fileID: 2802408368254430086}
   speed: 20
-  dashSpeed: 30
   gravity: -9.8
   turnSpeed: 540
-  dashForce: 2
-  dashDuration: 0
+  dashForce: 40
+  dashDuration: 0.2
+  dashCooldown: 1
+  minThrowForce: 10
+  maxThrowForce: 30
+  maxChargeTime: 2
+  throwAngle: -30
 --- !u!143 &2060708198199060151
 CharacterController:
   m_ObjectHideFlags: 0

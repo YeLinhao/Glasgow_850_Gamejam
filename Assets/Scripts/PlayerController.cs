@@ -1,4 +1,5 @@
 using Mono.Cecil.Cil;
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,22 +14,32 @@ public class PlayerController : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] private float speed = 10f;
-    [SerializeField] private float dashSpeed = 20f;
     [SerializeField] private float gravity = -9.8f;
     [SerializeField] private float turnSpeed = 360;
+
+    [Header("Dash Settings")]
+    [SerializeField] private float dashForce = 20f;
+    [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float dashCooldown = 1f;
+
+    [Header("Throw Settings")]
+    [SerializeField] private float minThrowForce = 10f;
+    [SerializeField] private float maxThrowForce = 30f;
+    [SerializeField] private float maxChargeTime = 2f;
+    [SerializeField] private float throwAngle = 30f; // degrees
+    private float throwStartTime;
 
 
     private CharacterController controller;
     private Vector2 moveInput;
-    private Vector3 velocity;
     private Vector3 move;
+    private float defaultSpeed;
 
-    private bool holdingObject = false;
-    private bool canDash;
-    private bool isDashing;
+    private bool isDashing = false;
+    private bool canDash = true;
 
-    public float dashForce;
-    public float dashDuration;
+    private float dashTimer;
+    private float dashCooldownTimer;
 
     private IPickupable heldObject;
 
@@ -37,6 +48,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         controller = GetComponent<CharacterController>();
+        defaultSpeed = speed;
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -48,19 +60,29 @@ public class PlayerController : MonoBehaviour
     {
         if (heldObject != null)
         {
-            if (context.performed)
+            // When player STARTS holding the throw button
+            if (context.started || context.performed)
             {
-                speed = speed / 4;
-                // TODO Collect start time
+                throwStartTime = Time.time;
+                speed /= 4f; // slow movement while charging
             }
-            if (context.action.WasReleasedThisFrame())
+
+            // When player RELEASES the throw button
+            if (context.canceled)
             {
-                speed = speed * 4;
-                // TODO throw with power = duration held
-                Vector3 force = transform.forward * 5f;
+                speed = defaultSpeed;
+
+                float holdTime = Time.time - throwStartTime;
+                float t = Mathf.Clamp01(holdTime / maxChargeTime);
+                float throwForce = Mathf.Lerp(minThrowForce, maxThrowForce, t);
+
+                // Compute a throw direction at an upward angle
+                Vector3 throwDirection = Quaternion.AngleAxis(throwAngle, transform.right) * transform.forward;
+
+                Vector3 force = throwDirection * throwForce;
                 (heldObject as PickupableItem)?.OnDrop(force);
                 heldObject = null;
-
+            
             }
         }
         else if (interactionZone.currentPickupable != null)
@@ -80,14 +102,33 @@ public class PlayerController : MonoBehaviour
 
     public void Dash(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && canDash && !isDashing)
         {
             Debug.Log("X pressed");
-            canDash = false;
-            isDashing = true;
-            rb.MovePosition(transform.position + (transform.forward * move.normalized.magnitude * dashForce) * speed * Time.deltaTime);
-
+            StartCoroutine(DashRoutine());
         }
+    }
+
+    private IEnumerator DashRoutine()
+    {
+        isDashing = true;
+        canDash = false;
+
+        float startTime = Time.time;
+        Vector3 dashDirection = transform.forward;
+
+        // Optional: disable gravity/movement control during dash
+        while (Time.time < startTime + dashDuration)
+        {
+            rb.MovePosition(rb.position + dashDirection * dashForce * Time.fixedDeltaTime);
+            yield return new WaitForFixedUpdate();
+        }
+
+        isDashing = false;
+
+        // Start cooldown
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
     }
 
 
@@ -110,8 +151,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isDashing)
+            return; // Skip normal movement while dashing
+
         move = new Vector3(moveInput.x, 0, moveInput.y);
         Look();
-        rb.MovePosition(transform.position + (transform.forward * move.normalized.magnitude) * speed * Time.deltaTime);
+        rb.MovePosition(transform.position + (transform.forward * move.magnitude) * speed * Time.deltaTime);
     }
 }
