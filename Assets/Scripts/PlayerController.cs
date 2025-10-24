@@ -120,7 +120,7 @@ public class PlayerController : MonoBehaviour
         // Optional: disable gravity/movement control during dash
         while (Time.time < startTime + dashDuration)
         {
-            rb.MovePosition(rb.position + dashDirection * dashForce * Time.fixedDeltaTime);
+            controller.Move(dashDirection * dashForce * Time.fixedDeltaTime);
             yield return new WaitForFixedUpdate();
         }
 
@@ -142,6 +142,7 @@ public class PlayerController : MonoBehaviour
         var relative = (transform.position + skewedInput) - transform.position;
         var rot = Quaternion.LookRotation(relative, Vector3.up);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, turnSpeed * Time.deltaTime);
+// rb.AddForce(-rb.GetAccumulatedForce());
     }
 
     private void Update()
@@ -156,6 +157,7 @@ public class PlayerController : MonoBehaviour
 
         move = new Vector3(moveInput.x, 0, moveInput.y);
         Look();
-        rb.MovePosition(transform.position + (transform.forward * move.magnitude) * speed * Time.deltaTime);
+        Vector3 moveDirection = transform.forward * move.magnitude * speed * Time.deltaTime;
+        controller.Move(moveDirection);
     }
 }
