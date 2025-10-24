@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,9 +10,11 @@ public class GameManager : MonoBehaviour
 
 
     public List<CharacterController> players;
+    public Dictionary<CharacterController, int> playerScores = new Dictionary<CharacterController, int>();
 
     // Internal dictionary for quick lookup
     private Dictionary<CharacterController, string> playerLookup = new Dictionary<CharacterController, string>();
+    
 
 
     void Awake()
@@ -30,6 +33,7 @@ public class GameManager : MonoBehaviour
         string playerName = "Player" + playerCount;
 
         playerLookup[newPlayer] = playerName;
+        playerScores[newPlayer] = 0;
 
         Debug.Log($"Added {playerName}");
     }
@@ -51,5 +55,11 @@ public class GameManager : MonoBehaviour
         {
             return "Unknown";
         }
+    }
+
+    internal void addScore(CharacterController owner, int score)
+    {
+        playerScores[owner] += score;
+        Debug.Log("Player: " + PlayerToName(owner) + " Score: " + playerScores[owner]);
     }
 }

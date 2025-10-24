@@ -14,6 +14,7 @@ public class ConeLandChecking : MonoBehaviour
         if (other.CompareTag("cone"))
         {
             Debug.Log("A cone entered the trigger!");
+            GameManager.instance.addScore(other.gameObject.GetComponent<PickupableItem>().owner,1);
             Destroy(other.gameObject);
             AddConeOnDuke();
         }
