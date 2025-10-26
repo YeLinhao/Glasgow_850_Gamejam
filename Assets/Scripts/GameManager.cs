@@ -5,7 +5,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public enum GameState
+    {
+        PreGame,
+        MainGame
+    }
+
     public static GameManager instance;
+    public static GameState CurrentState = GameState.PreGame;
+
 
 
 
@@ -55,6 +63,18 @@ public class GameManager : MonoBehaviour
         {
             return "Unknown";
         }
+    }
+
+    public void StartGame()
+    {
+        //Add ConeSpawer
+        // Start Timer
+        GameManager.CurrentState = GameState.MainGame;
+    }
+
+    public void EndGame()
+    {
+        // Reload Scene
     }
 
     internal void addScore(CharacterController owner, int score)

@@ -29,6 +29,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float throwAngle = 30f; // degrees
     private float throwStartTime;
 
+   
+    [SerializeField] private float holdDurationToStart = 2f;
+    private float interactHoldStartTime;
+    private bool interactIsHoldingStart = false;
+
 
     private CharacterController controller;
     private Vector2 moveInput;
@@ -53,51 +58,90 @@ public class PlayerController : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
-        moveInput = context.ReadValue<Vector2>();
+        if (GameManager.CurrentState == GameManager.GameState.MainGame)
+        {
+            moveInput = context.ReadValue<Vector2>();
+        }
     }
 
     public void Interact(InputAction.CallbackContext context)
     {
-        if (heldObject != null)
+        if (GameManager.CurrentState == GameManager.GameState.MainGame)
         {
-            // When player STARTS holding the throw button
-            if (context.started || context.performed)
+            if (heldObject != null)
             {
-                throwStartTime = Time.time;
-                speed /= 4f; // slow movement while charging
+                // When player STARTS holding the throw button
+                if (context.started || context.performed)
+                {
+                    throwStartTime = Time.time;
+                    speed /= 4f; // slow movement while charging
+                }
+
+                // When player RELEASES the throw button
+                if (context.canceled)
+                {
+                    speed = defaultSpeed;
+
+                    float holdTime = Time.time - throwStartTime;
+                    float t = Mathf.Clamp01(holdTime / maxChargeTime);
+                    float throwForce = Mathf.Lerp(minThrowForce, maxThrowForce, t);
+
+                    // Compute a throw direction at an upward angle
+                    Vector3 throwDirection = Quaternion.AngleAxis(throwAngle, transform.right) * transform.forward;
+
+                    Vector3 force = throwDirection * throwForce;
+                    (heldObject as PickupableItem)?.OnDrop(force);
+                    heldObject = null;
+
+                }
+            }
+            else if (interactionZone.currentPickupable != null)
+            {
+                // Pick up nearby object
+                heldObject = interactionZone.currentPickupable;
+                heldObject.OnPickup(holdPoint, controller);
+                interactionZone.currentPickupable = null;
+            }
+            else
+            {
+                Debug.Log("No pickupable object in range");
             }
 
-            // When player RELEASES the throw button
+        }
+
+        // PREGAME COMMANDS
+        else if (GameManager.CurrentState == GameManager.GameState.PreGame)
+        {
+            // When player starts holding the button
+            if (context.started)
+            {
+                interactIsHoldingStart = true;
+                interactHoldStartTime = Time.time;
+                // Start progress bar animation
+            }
+
+            // When player releases the button
             if (context.canceled)
             {
-                speed = defaultSpeed;
+                interactIsHoldingStart = false;
+                float totalHoldTime = Time.time - interactHoldStartTime;
 
-                float holdTime = Time.time - throwStartTime;
-                float t = Mathf.Clamp01(holdTime / maxChargeTime);
-                float throwForce = Mathf.Lerp(minThrowForce, maxThrowForce, t);
+                if (totalHoldTime >= holdDurationToStart)
+                {
 
-                // Compute a throw direction at an upward angle
-                Vector3 throwDirection = Quaternion.AngleAxis(throwAngle, transform.right) * transform.forward;
+                    GameManager.CurrentState = GameManager.GameState.MainGame;
+                }
+                else
+                {
 
-                Vector3 force = throwDirection * throwForce;
-                (heldObject as PickupableItem)?.OnDrop(force);
-                heldObject = null;
-            
+                    // Cancel progress animation
+                }
             }
+            
+
         }
-        else if (interactionZone.currentPickupable != null)
-        {
-            // Pick up nearby object
-            heldObject = interactionZone.currentPickupable;
-            heldObject.OnPickup(holdPoint, controller);
-            interactionZone.currentPickupable = null;
-        }
-        else
-        {
-            Debug.Log("No pickupable object in range");
-        }
-           
-        
+
+
     }
 
     public void Dash(InputAction.CallbackContext context)
@@ -111,24 +155,29 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DashRoutine()
     {
-        isDashing = true;
-        canDash = false;
-
-        float startTime = Time.time;
-        Vector3 dashDirection = transform.forward;
-
-        // Optional: disable gravity/movement control during dash
-        while (Time.time < startTime + dashDuration)
+        if (GameManager.CurrentState == GameManager.GameState.MainGame)
         {
-            controller.Move(dashDirection * dashForce * Time.fixedDeltaTime);
-            yield return new WaitForFixedUpdate();
+
+
+            isDashing = true;
+            canDash = false;
+
+            float startTime = Time.time;
+            Vector3 dashDirection = transform.forward;
+
+            // Optional: disable gravity/movement control during dash
+            while (Time.time < startTime + dashDuration)
+            {
+                controller.Move(dashDirection * dashForce * Time.fixedDeltaTime);
+                yield return new WaitForFixedUpdate();
+            }
+
+            isDashing = false;
+
+            // Start cooldown
+            yield return new WaitForSeconds(dashCooldown);
+            canDash = true;
         }
-
-        isDashing = false;
-
-        // Start cooldown
-        yield return new WaitForSeconds(dashCooldown);
-        canDash = true;
     }
 
 
@@ -152,13 +201,28 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isDashing)
-            return; // Skip normal movement while dashing
+        if (GameManager.CurrentState == GameManager.GameState.MainGame)
+        {
 
-        move = new Vector3(moveInput.x, 0, moveInput.y);
-        Look();
-        Vector3 moveDirection = transform.forward * move.magnitude * speed * Time.deltaTime;
-        controller.Move(moveDirection);
-        controller.Move(Vector3.up * gravity * Time.deltaTime);
+
+            if (isDashing)
+                return; // Skip normal movement while dashing
+
+            move = new Vector3(moveInput.x, 0, moveInput.y);
+            Look();
+            Vector3 moveDirection = transform.forward * move.magnitude * speed * Time.deltaTime;
+            controller.Move(moveDirection);
+            controller.Move(Vector3.up * gravity * Time.deltaTime);
+        }
+        else if (GameManager.CurrentState == GameManager.GameState.PreGame)
+        {
+            if (interactIsHoldingStart && Time.time - interactHoldStartTime >= holdDurationToStart)
+            {
+                interactIsHoldingStart = false; // stop multiple triggers
+                GameManager.instance.StartGame();
+                Debug.Log("Hold complete — starting the game!");
+            }
+
+        }
     }
 }
