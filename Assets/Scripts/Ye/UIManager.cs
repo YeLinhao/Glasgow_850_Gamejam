@@ -22,7 +22,7 @@ public class UIManager : MonoBehaviour
     public TMP_Text SecondPlace_Score;
     public TMP_Text ThirdPlace_Score;
 
-
+    public TMP_Text Player1_Score;
 
 
     public void UI_EnableLeaderboard()
@@ -30,6 +30,11 @@ public class UIManager : MonoBehaviour
         LeaderboardPanel.SetActive(true);
     }
 
+
+    private void Update()
+    {
+        Player1_Score.text = "Score" + GameManager.instance.playerScores[GameManager.instance.players[0]].ToString(); 
+    }
 
 
 }
