@@ -310,7 +310,7 @@ MonoBehaviour:
   interactionZone: {fileID: 1714468079349679569}
   holdPoint: {fileID: 2108264017449634367}
   rb: {fileID: 2802408368254430086}
-  speed: 20
+  speed: 18
   gravity: -9.8
   turnSpeed: 540
   dashForce: 40
@@ -320,6 +320,8 @@ MonoBehaviour:
   maxThrowForce: 30
   maxChargeTime: 2
   throwAngle: -30
+  speedReduction: 5
+  holdDurationToStart: 0.5
 --- !u!143 &2060708198199060151
 CharacterController:
   m_ObjectHideFlags: 0

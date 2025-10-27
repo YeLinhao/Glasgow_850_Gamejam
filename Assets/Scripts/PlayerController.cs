@@ -27,10 +27,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxThrowForce = 30f;
     [SerializeField] private float maxChargeTime = 2f;
     [SerializeField] private float throwAngle = 30f; // degrees
+    [SerializeField] private float speedReduction = 4f;
     private float throwStartTime;
+    private bool throwStarted;
 
    
-    [SerializeField] private float holdDurationToStart = 2f;
+    [SerializeField] private float holdDurationToStart = 0.5f;
     private float interactHoldStartTime;
     private bool interactIsHoldingStart = false;
 
@@ -68,17 +70,36 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.CurrentState == GameManager.GameState.MainGame)
         {
-            if (heldObject != null)
+            if (!context.started && !context.canceled)
+                return;
+
+            if (heldObject == null)
+            {
+                if (interactionZone.currentPickupable != null)
+                {
+                    // Pick up nearby object
+                    heldObject = interactionZone.currentPickupable;
+                    heldObject.OnPickup(holdPoint, controller);
+                    interactionZone.currentPickupable = null;
+                }
+                else
+                {
+                    Debug.Log("No pickupable object in range");
+                }
+            }
+            else
             {
                 // When player STARTS holding the throw button
-                if (context.started || context.performed)
+                if (context.started)
                 {
                     throwStartTime = Time.time;
-                    speed /= 4f; // slow movement while charging
+                    speed /= speedReduction; // slow movement while charging
+                    throwStarted = true;
+
                 }
 
                 // When player RELEASES the throw button
-                if (context.canceled)
+                else if (context.canceled && throwStarted == true)
                 {
                     speed = defaultSpeed;
 
@@ -92,20 +113,11 @@ public class PlayerController : MonoBehaviour
                     Vector3 force = throwDirection * throwForce;
                     (heldObject as PickupableItem)?.OnDrop(force);
                     heldObject = null;
+                    throwStarted = false;
 
                 }
             }
-            else if (interactionZone.currentPickupable != null)
-            {
-                // Pick up nearby object
-                heldObject = interactionZone.currentPickupable;
-                heldObject.OnPickup(holdPoint, controller);
-                interactionZone.currentPickupable = null;
-            }
-            else
-            {
-                Debug.Log("No pickupable object in range");
-            }
+            
 
         }
 
