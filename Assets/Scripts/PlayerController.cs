@@ -146,10 +146,24 @@ public class PlayerController : MonoBehaviour
 
     public void Dash(InputAction.CallbackContext context)
     {
-        if (context.performed && canDash && !isDashing)
+        if (GameManager.CurrentState == GameManager.GameState.MainGame)
         {
-            Debug.Log("X pressed");
-            StartCoroutine(DashRoutine());
+            if (context.performed && canDash && !isDashing)
+            {
+                Debug.Log("X pressed");
+                StartCoroutine(DashRoutine());
+            }
+        }
+        // PREGAME COMMANDS
+        else if (GameManager.CurrentState == GameManager.GameState.PreGame)
+        {
+            if (context.performed)
+            {
+                PlayerInput playerInput = controller.GetComponentInParent<PlayerInput>();
+                PlayerInputManager.instance.RemovePlayer(playerInput);
+            }
+   
+
         }
     }
 
