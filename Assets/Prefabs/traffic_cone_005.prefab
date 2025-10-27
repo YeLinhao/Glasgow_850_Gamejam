@@ -150,3 +150,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d2a7046bc27234a8665899322e8dbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  owner: {fileID: 0}
+  impactParticlesPrefab: {fileID: 1075846715068345609, guid: bfe0d7f0b43a9d54b82b1fcd30292cdd, type: 3}

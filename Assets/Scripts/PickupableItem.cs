@@ -6,6 +6,7 @@ public class PickupableItem : MonoBehaviour, IPickupable
     private Rigidbody rb;
     private Collider col;
     public CharacterController owner;
+    [SerializeField] private GameObject impactParticlesPrefab;
 
     private void Awake()
     {
@@ -38,5 +39,18 @@ public class PickupableItem : MonoBehaviour, IPickupable
         rb.isKinematic = false;
         col.enabled = true;
         rb.AddForce(throwForce, ForceMode.Impulse);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            if (impactParticlesPrefab != null && collision.contacts.Length > 0)
+            {
+                ContactPoint contact = collision.contacts[0];
+                GameObject particles = Instantiate(impactParticlesPrefab, contact.point, Quaternion.LookRotation(contact.normal));
+                Destroy(particles, 2f);
+            }
+        }
     }
 }
