@@ -28,6 +28,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxChargeTime = 2f;
     [SerializeField] private float throwAngle = 30f; // degrees
     [SerializeField] private float speedReduction = 4f;
+
+    [Header("Throw Arc Rendering Settings")]
+    [SerializeField] private LineRenderer trajectoryLine;
+    [SerializeField] private int trajectoryResolution = 30; // how smooth the arc is
+    [SerializeField] private float simulationStep = 0.05f; // smaller = smoother but more expensive
+    [SerializeField] private float simulationDuration = 2f; // seconds to simulate
+    [SerializeField] private LayerMask collisionMask; // stops the line when hitting walls
+
     private float throwStartTime;
     private bool throwStarted;
 
@@ -35,6 +43,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float holdDurationToStart = 0.5f;
     private float interactHoldStartTime;
     private bool interactIsHoldingStart = false;
+
+
 
 
     private CharacterController controller;
@@ -56,6 +66,11 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         defaultSpeed = speed;
+    }
+    private void Start()
+    {
+        if (trajectoryLine != null)
+            trajectoryLine.enabled = false;
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -114,6 +129,8 @@ public class PlayerController : MonoBehaviour
                     (heldObject as PickupableItem)?.OnDrop(force);
                     heldObject = null;
                     throwStarted = false;
+                    if (trajectoryLine != null)
+                        trajectoryLine.enabled = false;
 
                 }
             }
@@ -219,6 +236,59 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, turnSpeed * Time.deltaTime);
 // rb.AddForce(-rb.GetAccumulatedForce());
     }
+    private void DrawThrowArc()
+    {
+        if (throwStarted && heldObject != null)
+        {
+            float holdTime = Time.time - throwStartTime;
+            float t = Mathf.Clamp01(holdTime / maxChargeTime);
+            float throwForce = Mathf.Lerp(minThrowForce, maxThrowForce, t);
+
+            Vector3 throwDirection = Quaternion.AngleAxis(throwAngle, transform.right) * transform.forward;
+            Vector3 force = throwDirection * throwForce;
+
+            ShowTrajectory(holdPoint.position, force / (heldObject.gameObject.GetComponent<Rigidbody>()?.mass ?? 1f));
+
+        }
+        else if (trajectoryLine.enabled)
+        {
+            trajectoryLine.enabled = false;
+        }
+    }
+
+    private void ShowTrajectory(Vector3 startPos, Vector3 initialVelocity)
+    {
+        if (trajectoryLine == null)
+            return;
+
+        trajectoryLine.enabled = true;
+
+        Vector3[] points = new Vector3[trajectoryResolution];
+        Vector3 currentPosition = startPos;
+        Vector3 velocity = initialVelocity;
+        float step = simulationDuration / trajectoryResolution;
+
+        for (int i = 0; i < trajectoryResolution; i++)
+        {
+            points[i] = currentPosition;
+            // Simple physics: p = p0 + v*t + 0.5*g*t²
+            velocity += Physics.gravity * step;
+            currentPosition += velocity * step;
+
+            // Optional: stop if raycast hits something
+            if (Physics.Raycast(points[i], velocity.normalized, out RaycastHit hit, velocity.magnitude * step, collisionMask))
+            {
+                points[i + 1 >= trajectoryResolution ? trajectoryResolution - 1 : i + 1] = hit.point;
+                trajectoryLine.positionCount = i + 2;
+                trajectoryLine.SetPositions(points);
+                return;
+            }
+        }
+
+        trajectoryLine.positionCount = trajectoryResolution;
+        trajectoryLine.SetPositions(points);
+    }
+
 
     private void Update()
     {
@@ -239,6 +309,8 @@ public class PlayerController : MonoBehaviour
             Vector3 moveDirection = transform.forward * move.magnitude * speed * Time.deltaTime;
             controller.Move(moveDirection);
             controller.Move(Vector3.up * gravity * Time.deltaTime);
+            DrawThrowArc();
+
         }
         else if (GameManager.CurrentState == GameManager.GameState.PreGame)
         {
