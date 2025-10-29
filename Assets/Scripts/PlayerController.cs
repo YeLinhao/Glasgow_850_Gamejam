@@ -1,9 +1,11 @@
-using Mono.Cecil.Cil;
+using System;
 using System.Collections;
+using Mono.Cecil.Cil;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,6 +13,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private InteractionZone interactionZone;
     [SerializeField] private Transform holdPoint;
     [SerializeField] private Rigidbody rb;
+
+    
 
     [Header("Movement Settings")]
     [SerializeField] private float speed = 10f;
@@ -40,7 +44,7 @@ public class PlayerController : MonoBehaviour
     private bool throwStarted;
 
    
-    [SerializeField] private float holdDurationToStart = 0.5f;
+    [SerializeField] private float holdDurationToStart = 2f;
     private float interactHoldStartTime;
     private bool interactIsHoldingStart = false;
 
@@ -59,6 +63,9 @@ public class PlayerController : MonoBehaviour
     private float dashCooldownTimer;
 
     private IPickupable heldObject;
+
+    private Slider progressSlider;
+    private float sliderProgress;
 
 
 
@@ -147,8 +154,8 @@ public class PlayerController : MonoBehaviour
                 interactIsHoldingStart = true;
                 interactHoldStartTime = Time.time;
                 // Start progress bar animation
+                UIManager.Instance.GameStartProgress360.gameObject.SetActive(true);
             }
-
             // When player releases the button
             if (context.canceled)
             {
@@ -160,15 +167,14 @@ public class PlayerController : MonoBehaviour
 
                     GameManager.CurrentState = GameManager.GameState.MainGame;
                 }
-                else
-                {
+                sliderProgress = 0;
+                UIManager.Instance.GameStartProgress360.value = sliderProgress;
+                // Hide 360 progress bar
+                UIManager.Instance.GameStartProgress360.gameObject.SetActive(false);
 
-                    // Cancel progress animation
-                }
             }
-            
-
         }
+           
 
 
     }
@@ -312,13 +318,16 @@ public class PlayerController : MonoBehaviour
             DrawThrowArc();
 
         }
-        else if (GameManager.CurrentState == GameManager.GameState.PreGame)
+        else if (GameManager.CurrentState == GameManager.GameState.PreGame && interactIsHoldingStart)
         {
-            if (interactIsHoldingStart && Time.time - interactHoldStartTime >= holdDurationToStart)
+            sliderProgress = Mathf.Clamp01((Time.time - interactHoldStartTime) / holdDurationToStart);
+            UIManager.Instance.GameStartProgress360.value = sliderProgress;
+            if (sliderProgress >= 1f)
             {
-                interactIsHoldingStart = false; // stop multiple triggers
+                // Complete interaction
+                interactIsHoldingStart = false;
+                UIManager.Instance.GameStartProgress360.gameObject.SetActive(false);
                 GameManager.instance.StartGame();
-                Debug.Log("Hold complete — starting the game!");
             }
 
         }

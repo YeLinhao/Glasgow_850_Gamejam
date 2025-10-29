@@ -311,6 +311,8 @@ MonoBehaviour:
   interactionZone: {fileID: 1714468079349679569}
   holdPoint: {fileID: 2108264017449634367}
   rb: {fileID: 2802408368254430086}
+  progressBarPrefab: {fileID: 559974194885611937, guid: 4120c61be88d0dd4d80aa99fb5fbfe12, type: 3}
+  uiCanvas: {fileID: 0}
   speed: 18
   gravity: -9.8
   turnSpeed: 540
@@ -329,7 +331,7 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 0
-  holdDurationToStart: 0.5
+  holdDurationToStart: 2
 --- !u!143 &2060708198199060151
 CharacterController:
   m_ObjectHideFlags: 0
