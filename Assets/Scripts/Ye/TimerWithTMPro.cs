@@ -14,11 +14,16 @@ public class TimerWithTMPro : MonoBehaviour
     {
         currentTime = totalTime;
         UpdateTimerDisplay();
-        StartTimer();
     }
 
     void Update()
     {
+        if (GameManager.CurrentState == GameManager.GameState.MainGame && isTimerRunning == false)
+        {
+            StartTimer();
+        }
+
+
         if (isTimerRunning)
         {
             currentTime -= Time.deltaTime;
