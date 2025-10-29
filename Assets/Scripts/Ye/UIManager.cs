@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
 
     public List<GameObject> playerScoreBoards;
     public List<TMP_Text> playersScore;
-
+    public Slider GameStartProgress360;
 
     public void UI_EnableLeaderboard()
     {

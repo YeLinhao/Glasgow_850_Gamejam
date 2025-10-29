@@ -2749,6 +2749,7 @@ MonoBehaviour:
   - {fileID: 171022188742833396}
   - {fileID: 5867564566516722081}
   - {fileID: 7333306826461684544}
+  GameStartProgress360: {fileID: 8251398877791264916}
 --- !u!1 &8603978779187228772
 GameObject:
   m_ObjectHideFlags: 0
@@ -3042,3 +3043,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 400112147773835232, guid: 4120c61be88d0dd4d80aa99fb5fbfe12, type: 3}
   m_PrefabInstance: {fileID: 4100321709905897713}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8251398877791264916 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5360866102317238373, guid: 4120c61be88d0dd4d80aa99fb5fbfe12, type: 3}
+  m_PrefabInstance: {fileID: 4100321709905897713}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
