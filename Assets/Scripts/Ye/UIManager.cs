@@ -31,6 +31,9 @@ public class UIManager : MonoBehaviour
     public void UI_EnableLeaderboard()
     {
         LeaderboardPanel.SetActive(true);
+        FirstPlace_Score.text = GameManager.instance.GetTop3Players()[0].Value.ToString();
+        SecondPlace_Score.text = GameManager.instance.GetTop3Players()[1].Value.ToString();
+        ThirdPlace_Score.text = GameManager.instance.GetTop3Players()[2].Value.ToString();
     }
 
 

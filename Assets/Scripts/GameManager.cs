@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviour
         players.Remove(player);
     }
 
-
     public string PlayerToName(CharacterController player)
     {
         if (playerLookup.TryGetValue(player, out string name))
@@ -70,6 +69,14 @@ public class GameManager : MonoBehaviour
             return "Unknown";
         }
     }
+
+    //getting top 3 players
+    public List<KeyValuePair<CharacterController,int>> GetTop3Players() 
+    {
+        return playerScores.OrderByDescending(pair => pair.Value).Take(3).ToList();
+    }
+
+
 
     public void StartGame()
     {
@@ -88,4 +95,8 @@ public class GameManager : MonoBehaviour
         playerScores[owner] += score;
         Debug.Log("Player: " + PlayerToName(owner) + " Score: " + playerScores[owner]);
     }
+
+
+
+
 }
