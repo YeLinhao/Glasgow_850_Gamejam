@@ -53,6 +53,9 @@ public class GameManager : MonoBehaviour
     {
         if (playerLookup.ContainsKey(player))
             playerLookup.Remove(player);
+        
+        UIManager.Instance.playerScoreBoards[players.IndexOf(player)].SetActive(false);
+        players.Remove(player);
     }
 
 
