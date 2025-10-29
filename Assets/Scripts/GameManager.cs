@@ -43,6 +43,9 @@ public class GameManager : MonoBehaviour
         playerLookup[newPlayer] = playerName;
         playerScores[newPlayer] = 0;
 
+        //Show playerUI
+        UIManager.Instance.playerScoreBoards[players.IndexOf(newPlayer)].SetActive(true); 
+
         Debug.Log($"Added {playerName}");
     }
 

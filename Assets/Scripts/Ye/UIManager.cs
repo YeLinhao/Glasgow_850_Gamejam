@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Collections.Generic;
 using TMPro;
 
 public class UIManager : MonoBehaviour
@@ -22,7 +24,8 @@ public class UIManager : MonoBehaviour
     public TMP_Text SecondPlace_Score;
     public TMP_Text ThirdPlace_Score;
 
-    public TMP_Text Player1_Score;
+    public List<GameObject> playerScoreBoards;
+    public List<TMP_Text> playersScore;
 
 
     public void UI_EnableLeaderboard()
@@ -33,7 +36,25 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        Player1_Score.text = "Score" + GameManager.instance.playerScores[GameManager.instance.players[0]].ToString(); 
+        //foreach (var item in GameManager.instance.players)
+        //{
+        //    item.
+        //    playersScore[]
+        //}
+
+
+        if (GameManager.instance.players.Count != 0) 
+        {
+            int index = 0;//index of player in loop
+            foreach (var item in GameManager.instance.players)
+            {
+                playersScore[index].text = "Score" + GameManager.instance.playerScores[item].ToString();
+                index++;
+            }
+            index = 0;
+
+
+        }
     }
 
 
