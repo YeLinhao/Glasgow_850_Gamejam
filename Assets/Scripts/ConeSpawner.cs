@@ -15,10 +15,11 @@ public class ConeSpawner : MonoBehaviour
     [SerializeField] private float spawnY = 1f;
 
     private List<GameObject> conesInPlay = new List<GameObject>();
+    private bool spawnStarted = false;
 
     void Start()
     {
-        StartCoroutine(SpawnRoutine());
+        
     }
 
     private IEnumerator SpawnRoutine()
@@ -73,4 +74,12 @@ public class ConeSpawner : MonoBehaviour
         else if (rand < 0.25f) return blueConePrefab; // next 20%
         else return orangeConePrefab; // remaining 75%
     }
-}
+    private void Update()
+    {
+        if (GameManager.CurrentState == GameManager.GameState.MainGame && spawnStarted == false)
+        {
+            StartCoroutine(SpawnRoutine());
+            spawnStarted = true;
+        }
+    }
+    }
