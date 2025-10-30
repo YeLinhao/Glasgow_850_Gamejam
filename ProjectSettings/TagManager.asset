@@ -6,6 +6,8 @@ TagManager:
   tags:
   - cone
   - Ground
+  - blueCone
+  - greenCone
   layers:
   - Default
   - TransparentFX
