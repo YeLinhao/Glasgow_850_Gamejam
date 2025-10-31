@@ -1,4 +1,3 @@
-using System.Buffers;
 using UnityEngine;
 
 public class PickupableItem : MonoBehaviour, IPickupable
@@ -8,24 +7,51 @@ public class PickupableItem : MonoBehaviour, IPickupable
     public CharacterController owner;
     [SerializeField] private GameObject impactParticlesPrefab;
 
+    [Header("Motion Trail Settings")]
+    [SerializeField] private TrailRenderer trail; // assign in inspector
+    [SerializeField] private float speedThreshold = 5f; // speed to start fading
+    [SerializeField] private float maxSpeed = 20f;      // speed at which trail is at maximum length/width
+    [SerializeField] private float fadeSpeed = 2f;      // how fast trail length/width interpolates
+    [SerializeField] private float maxTrailWidth = 0.5f; // maximum trail width
+    private float defaultTrailTime;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+
+        if (trail != null)
+        {
+            defaultTrailTime = trail.time;
+            trail.time = 0f; // start invisible
+            trail.widthMultiplier = 0f; // start thin
+        }
+    }
+
+    private void Update()
+    {
+        if (trail == null || rb == null) return;
+
+        float speed = rb.linearVelocity.magnitude;
+
+        // Determine target trail length based on speed
+        float normalizedSpeed = Mathf.Clamp01((speed - speedThreshold) / (maxSpeed - speedThreshold));
+        float targetTrailTime = normalizedSpeed * defaultTrailTime;
+        float targetTrailWidth = normalizedSpeed * maxTrailWidth;
+
+        // Smoothly interpolate trail properties
+        trail.time = Mathf.Lerp(trail.time, targetTrailTime, Time.deltaTime * fadeSpeed);
+        trail.widthMultiplier = Mathf.Lerp(trail.widthMultiplier, targetTrailWidth, Time.deltaTime * fadeSpeed);
     }
 
     public void OnPickup(Transform holdParent, CharacterController player)
     {
-        // Disable physics while being held
         rb.isKinematic = true;
         col.enabled = false;
 
-        // Parent to hold point
         transform.SetParent(holdParent);
         owner = player;
 
-
-        // Reset local position/rotation for proper alignment
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
 
@@ -34,7 +60,6 @@ public class PickupableItem : MonoBehaviour, IPickupable
 
     public void OnDrop(Vector3 throwForce)
     {
-        // Re-enable physics and apply a force
         transform.SetParent(null);
         rb.isKinematic = false;
         col.enabled = true;
