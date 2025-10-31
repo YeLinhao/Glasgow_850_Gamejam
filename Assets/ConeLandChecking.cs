@@ -11,6 +11,8 @@ public class ConeLandChecking : MonoBehaviour
     [SerializeField] private GameObject orangeConeMeshPrefab;
     [SerializeField] private GameObject blueConeMeshPrefab;
     [SerializeField] private GameObject greenConeMeshPrefab;
+
+    [SerializeField] private GameObject starEffectPrefab;
     private int nextIndex = 0;
     private float spawnYOffset = 0f; // keeps track of Y increment
 
@@ -75,6 +77,12 @@ public class ConeLandChecking : MonoBehaviour
         // Instantiate the cone
         GameManager.instance.addScore(destroyedCone.gameObject.GetComponent<PickupableItem>().owner, score);
         Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+
+        if (starEffectPrefab != null)
+        {
+            GameObject effect = Instantiate(starEffectPrefab, spawnPos, Quaternion.identity);
+            Destroy(effect, 2f); // clean up after 2 seconds
+        }
     }
 
 }

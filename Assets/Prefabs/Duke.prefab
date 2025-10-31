@@ -700,6 +700,7 @@ MonoBehaviour:
   orangeConeMeshPrefab: {fileID: 2306888168226763931, guid: 42e378f682459d14c81a5e2bb70377b1, type: 3}
   blueConeMeshPrefab: {fileID: 2306888168226763931, guid: b64a1d7701b3e9f4d8e8c411b0a008e3, type: 3}
   greenConeMeshPrefab: {fileID: 2306888168226763931, guid: 9123f013c9f6a5e4faa9ec6ef2c8ed27, type: 3}
+  starEffectPrefab: {fileID: 4039910831571461650, guid: 25970fda436c7434393cf47f8fc7bac4, type: 3}
 --- !u!1 &3474585194906720996
 GameObject:
   m_ObjectHideFlags: 0
