@@ -32,9 +32,21 @@ public class UIManager : MonoBehaviour
     public void UI_EnableLeaderboard()
     {
         LeaderboardPanel.SetActive(true);
+
+        Debug.Log("PLAYER NUM: " + GameManager.instance.GetTop3Players().Count);
+
         FirstPlace_Score.text = GameManager.instance.GetTop3Players()[0].Value.ToString();
-        SecondPlace_Score.text = GameManager.instance.GetTop3Players()[1].Value.ToString();
-        ThirdPlace_Score.text = GameManager.instance.GetTop3Players()[2].Value.ToString();
+
+        if (GameManager.instance.GetTop3Players().Count >= 2)
+        {
+            SecondPlace_Score.text = GameManager.instance.GetTop3Players()[1].Value.ToString();
+        }
+
+        if (GameManager.instance.GetTop3Players().Count >= 3)
+        {
+            ThirdPlace_Score.text = GameManager.instance.GetTop3Players()[2].Value.ToString();
+        }
+   
 
         
     }
@@ -42,19 +54,14 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        //foreach (var item in GameManager.instance.players)
-        //{
-        //    item.
-        //    playersScore[]
-        //}
 
-
+        //Update player regular score board
         if (GameManager.instance.players.Count != 0) 
         {
             int index = 0;//index of player in loop
             foreach (var item in GameManager.instance.players)
             {
-                playersScore[index].text = "Score" + GameManager.instance.playerScores[item].ToString();
+                playersScore[index].text = GameManager.instance.playerScores[item].ToString();
                 index++;
             }
             index = 0;
