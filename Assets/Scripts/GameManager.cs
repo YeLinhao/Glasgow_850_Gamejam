@@ -44,7 +44,8 @@ public class GameManager : MonoBehaviour
         playerScores[newPlayer] = 0;
 
         //Show playerUI
-        UIManager.Instance.playerScoreBoards[players.IndexOf(newPlayer)].SetActive(true); 
+        UIManager.Instance.UI_UpdatePersonalScoreBoards(players.Count);
+        //UIManager.Instance.playerScoreBoards[players.IndexOf(newPlayer)].SetActive(true); 
 
         Debug.Log($"Added {playerName}");
     }
@@ -54,8 +55,9 @@ public class GameManager : MonoBehaviour
         if (playerLookup.ContainsKey(player))
             playerLookup.Remove(player);
         
-        UIManager.Instance.playerScoreBoards[players.IndexOf(player)].SetActive(false);
+        //UIManager.Instance.playerScoreBoards[players.IndexOf(player)].SetActive(false);
         players.Remove(player);
+        UIManager.Instance.UI_UpdatePersonalScoreBoards(players.Count);
     }
 
     public string PlayerToName(CharacterController player)

@@ -47,8 +47,20 @@ public class UIManager : MonoBehaviour
             ThirdPlace_Score.text = GameManager.instance.GetTop3Players()[2].Value.ToString();
         }
    
+    }
 
-        
+    public void UI_UpdatePersonalScoreBoards(int playerNumbers)
+    {
+        foreach (var item in playerScoreBoards)
+        {
+            item.SetActive(false);
+        }
+
+        for (int i = 0; i < playerNumbers; i++)
+        {
+            playerScoreBoards[i].SetActive(true);
+        }
+
     }
 
 
