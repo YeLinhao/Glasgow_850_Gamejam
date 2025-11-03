@@ -19,6 +19,8 @@ public class IrnBru : MonoBehaviour
     public float enlargeMultiplier = 3f;
     public float duration = 30f;
     public GameObject IrnbruModel;
+    public GameObject IrnBruPic;
+
     private bool hasTriggered = false;
 
 
@@ -30,15 +32,25 @@ public class IrnBru : MonoBehaviour
             IrnbruModel.SetActive(false);
             this.GetComponent<AudioSource>().Play();
 
+
+            StartCoroutine(IrnBruPicCor());
             StartCoroutine(EnlargeTemporarily(other.transform));
         }
 
 
     }
 
+    private IEnumerator IrnBruPicCor()
+    {
 
+        IrnBruPic.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        IrnBruPic.SetActive(false);
+
+    }
     private IEnumerator EnlargeTemporarily(Transform player)
     {
+        
         Vector3 originalScale = player.localScale; 
         player.localScale = originalScale * enlargeMultiplier; 
         Debug.Log("Player enlarged!");
