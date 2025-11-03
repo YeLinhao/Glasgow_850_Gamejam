@@ -28,6 +28,8 @@ public class IrnBru : MonoBehaviour
         {
             hasTriggered = true;
             IrnbruModel.SetActive(false);
+            this.GetComponent<AudioSource>().Play();
+
             StartCoroutine(EnlargeTemporarily(other.transform));
         }
 
