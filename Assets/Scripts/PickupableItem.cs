@@ -1,4 +1,5 @@
 using UnityEngine;
+using static GameManager;
 
 public class PickupableItem : MonoBehaviour, IPickupable
 {
@@ -42,6 +43,16 @@ public class PickupableItem : MonoBehaviour, IPickupable
         // Smoothly interpolate trail properties
         trail.time = Mathf.Lerp(trail.time, targetTrailTime, Time.deltaTime * fadeSpeed);
         trail.widthMultiplier = Mathf.Lerp(trail.widthMultiplier, targetTrailWidth, Time.deltaTime * fadeSpeed);
+
+        switch (GameManager.instance.currentWeather)
+        {
+            case WeatherType.Rain:
+                ApplyRainEffect();
+                break;
+            case WeatherType.Wind:
+                ApplyWindEffect();
+                break;
+        }
     }
 
     public void OnPickup(Transform holdParent, CharacterController player)
@@ -77,5 +88,17 @@ public class PickupableItem : MonoBehaviour, IPickupable
                 Destroy(particles, 2f);
             }
         }
+    }
+
+    void ApplyRainEffect()
+    {
+        Vector3 rainForce = Vector3.down * GameManager.instance.rainForce;
+        rb.AddForce(rainForce, ForceMode.Acceleration);
+    }
+
+    void ApplyWindEffect()
+    {
+        Vector3 wind = GameManager.instance.windDirection.normalized * GameManager.instance.windForce;
+        rb.AddForce(wind, ForceMode.Acceleration);
     }
 }
