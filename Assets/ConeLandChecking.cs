@@ -13,6 +13,7 @@ public class ConeLandChecking : MonoBehaviour
     [SerializeField] private GameObject greenConeMeshPrefab;
 
     [SerializeField] private GameObject starEffectPrefab;
+    [SerializeField] private GameObject scorePopupPrefab;
     private int nextIndex = 0;
     private float spawnYOffset = 0f; // keeps track of Y increment
 
@@ -82,6 +83,12 @@ public class ConeLandChecking : MonoBehaviour
         {
             GameObject effect = Instantiate(starEffectPrefab, spawnPos, Quaternion.identity);
             Destroy(effect, 2f); // clean up after 2 seconds
+        }
+
+        if (scorePopupPrefab != null)
+        {
+            GameObject popup = Instantiate(scorePopupPrefab, spawnPos + Vector3.up * 1f, Quaternion.identity);
+            popup.GetComponent<ScorePopup>().Setup(score);
         }
     }
 
