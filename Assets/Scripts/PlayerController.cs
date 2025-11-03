@@ -277,7 +277,7 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < trajectoryResolution; i++)
         {
             points[i] = currentPosition;
-            // Simple physics: p = p0 + v*t + 0.5*g*t²
+            // Simple physics: p = p0 + v*t + 0.5*g*t?
             velocity += Physics.gravity * step;
             currentPosition += velocity * step;
 

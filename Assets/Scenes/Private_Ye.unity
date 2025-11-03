@@ -1334,6 +1334,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Duke
       objectReference: {fileID: 0}
+    - target: {fileID: 6537255416150037955, guid: 3ad89c0d2a01a564697bc4d456957a1a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2448,6 +2452,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b82e76f4092b7d24aaeecddf36fe8d3b, type: 3}
+--- !u!1001 &1223145277
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4125122572807457541, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.897012
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125122572807457541, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.286
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125122572807457541, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.8370342
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125122572807457541, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125122572807457541, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125122572807457541, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125122572807457541, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125122572807457541, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125122572807457541, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4125122572807457541, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7154543723320354354, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+      propertyPath: m_Name
+      value: Irn-Bru
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
 --- !u!1001 &1224778511
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2866,6 +2927,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97e07cca58a2f3648ac7528f6bd1f7fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentWeather: 1
+  rainParticles: {fileID: 7752718034436889970, guid: 2d7ae3b77cbf67d49b83e998d4c1d29d, type: 3}
+  windDirection: {x: 1, y: 0, z: 0}
+  windForce: 0.5
+  rainForce: 1
+  windTrailPrefab: {fileID: 0}
+  windTrailSpawnRate: 0.5
+  windAreaSize: {x: 30, y: 10, z: 30}
+  windDuration: 0
   players: []
 --- !u!4 &1546126979
 Transform:
@@ -3668,3 +3738,4 @@ SceneRoots:
   - {fileID: 328081050}
   - {fileID: 643925159}
   - {fileID: 1638485461}
+  - {fileID: 1223145277}

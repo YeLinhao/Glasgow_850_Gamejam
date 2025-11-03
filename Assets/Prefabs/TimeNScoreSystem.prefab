@@ -3307,6 +3307,11 @@ MonoBehaviour:
   - {fileID: 5867564566516722081}
   - {fileID: 7333306826461684544}
   GameStartProgress360: {fileID: 8251398877791264916}
+  PlayerOutlines:
+  - {fileID: 2100000, guid: e5c85c832089c434691877f146f28884, type: 2}
+  - {fileID: 2100000, guid: 31e61da5913998c4abdfdef91df56638, type: 2}
+  - {fileID: 2100000, guid: 0abd80f7a64f05841b0090a6a3cad3c9, type: 2}
+  - {fileID: 2100000, guid: b940218f3ee1403449822fc2f269ff4d, type: 2}
 --- !u!1 &8603978779187228772
 GameObject:
   m_ObjectHideFlags: 0
