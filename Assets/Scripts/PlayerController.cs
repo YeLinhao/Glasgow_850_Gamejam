@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float holdDurationToStart = 2f;
     private float interactHoldStartTime;
     private bool interactIsHoldingStart = false;
-
+    public bool isDrunk = false;
 
 
 
