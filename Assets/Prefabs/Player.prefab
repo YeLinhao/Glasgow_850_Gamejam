@@ -181,8 +181,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.3333335, y: 3, z: 1.6666667}
-  m_Center: {x: 0.00000007947286, y: 1, z: -0.33333334}
+  m_Size: {x: 2.3333335, y: 3.6666667, z: 1.6666667}
+  m_Center: {x: 0.00000007947286, y: 0.6666667, z: -0.33333334}
 --- !u!114 &1714468079349679569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,9 +330,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 2.6666667
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &8528888950030157079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,6 +406,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 8cccc5af-e0ce-443a-82fa-39b6a394347d
     m_ActionName: 'Gameplay/Dash[/XInputControllerWindows/buttonWest]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2e8ca1bf-d3ea-4c89-a311-7423388c75e3
+    m_ActionName: UIControl/Navigate
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2ecdcc4e-06fd-4b19-ac85-70557f3fdaa7
+    m_ActionName: UIControl/Submit
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -445,6 +453,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   holdDurationToStart: 2
+  isDrunk: 0
 --- !u!143 &2060708198199060151
 CharacterController:
   m_ObjectHideFlags: 0
