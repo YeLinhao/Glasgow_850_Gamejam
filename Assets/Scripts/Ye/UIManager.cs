@@ -30,6 +30,8 @@ public class UIManager : MonoBehaviour
     public Slider GameStartProgress360;
 
     public List<Material> PlayerMarkColors;
+    public List<RawImage> ScoreboardImages;
+    public List<RenderTexture> Player_3D_RenderTextures;
 
 
     //When game ends
@@ -39,16 +41,20 @@ public class UIManager : MonoBehaviour
 
         Debug.Log("PLAYER NUM: " + GameManager.instance.GetTop3Players().Count);
 
+
         FirstPlace_Score.text = GameManager.instance.GetTop3Players()[0].Value.ToString();
+        ScoreboardImages[0].texture = Player_3D_RenderTextures[GameManager.instance.players.IndexOf(GameManager.instance.GetTop3Players()[0].Key)];
 
         if (GameManager.instance.GetTop3Players().Count >= 2)
         {
             SecondPlace_Score.text = GameManager.instance.GetTop3Players()[1].Value.ToString();
+            ScoreboardImages[1].texture = Player_3D_RenderTextures[GameManager.instance.players.IndexOf(GameManager.instance.GetTop3Players()[1].Key)];
         }
 
         if (GameManager.instance.GetTop3Players().Count >= 3)
         {
             ThirdPlace_Score.text = GameManager.instance.GetTop3Players()[2].Value.ToString();
+            ScoreboardImages[2].texture = Player_3D_RenderTextures[GameManager.instance.players.IndexOf(GameManager.instance.GetTop3Players()[2].Key)];
         }
    
     }
