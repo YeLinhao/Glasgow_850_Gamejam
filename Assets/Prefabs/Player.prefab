@@ -406,11 +406,7 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 8cccc5af-e0ce-443a-82fa-39b6a394347d
     m_ActionName: 'Gameplay/Dash[/XInputControllerWindows/buttonWest]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: f1d16074-1405-471b-ba21-abd4dfcdae4c
-    m_ActionName: 'Gameplay/Turn[/XInputControllerWindows/rightStick]'
-  m_NeverAutoSwitchControlSchemes: 0
+  m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
