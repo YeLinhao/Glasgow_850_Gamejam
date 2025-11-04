@@ -153,15 +153,21 @@ public class PlayerController : MonoBehaviour
             {
                 interactIsHoldingStart = true;
                 interactHoldStartTime = Time.time;
+
                 // Start progress bar animation
-                UIManager.Instance.GameStartProgress360.gameObject.SetActive(true);
+                var progressBar = UIManager.Instance.GameStartProgress360;
+                progressBar.gameObject.SetActive(true);
+                //update sfx time with progress
+                progressBar.GetComponent<AudioSource>().Play();
+                //progressBar.GetComponent<AudioSource>().time = progressBar.GetComponent<Slider>().value * progressBar.GetComponent<AudioSource>().clip.length;
             }
+
             // When player releases the button
             if (context.canceled)
             {
                 interactIsHoldingStart = false;
                 float totalHoldTime = Time.time - interactHoldStartTime;
-
+                
                 if (totalHoldTime >= holdDurationToStart)
                 {
 
@@ -171,6 +177,13 @@ public class PlayerController : MonoBehaviour
                 UIManager.Instance.GameStartProgress360.value = sliderProgress;
                 // Hide 360 progress bar
                 UIManager.Instance.GameStartProgress360.gameObject.SetActive(false);
+
+                //stop sfx
+                var progressBar = UIManager.Instance.GameStartProgress360;
+                progressBar.GetComponent<AudioSource>().Stop();
+                progressBar.GetComponent<AudioSource>().time = 0;
+
+
 
             }
         }
@@ -186,6 +199,7 @@ public class PlayerController : MonoBehaviour
             if (context.performed && canDash && !isDashing)
             {
                 Debug.Log("X pressed");
+                this.GetComponent<PlayerAudioControl>().dashSounds.Play();//play sfx
                 StartCoroutine(DashRoutine());
             }
         }
