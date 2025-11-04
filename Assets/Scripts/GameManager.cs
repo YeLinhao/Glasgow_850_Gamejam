@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
+        CurrentState = GameState.PreGame;
     }
     public void AddPlayer(CharacterController newPlayer)
     {
