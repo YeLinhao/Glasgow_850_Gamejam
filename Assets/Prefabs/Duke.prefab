@@ -1721,10 +1721,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 2.5
-  m_Height: 2.8769708
-  m_Direction: 1
-  m_Center: {x: 0, y: -0.00000019597805, z: 0}
+  m_Radius: 1.1780087
+  m_Height: 11.375011
+  m_Direction: 2
+  m_Center: {x: 0, y: -0.41099614, z: 0.58438635}
 --- !u!1 &6937875477615951296
 GameObject:
   m_ObjectHideFlags: 0
