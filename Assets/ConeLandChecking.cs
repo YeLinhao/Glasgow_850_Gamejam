@@ -14,6 +14,9 @@ public class ConeLandChecking : MonoBehaviour
 
     [SerializeField] private GameObject starEffectPrefab;
     [SerializeField] private GameObject scorePopupPrefab;
+
+    [SerializeField] private AudioSource scoreSfx;
+
     private int nextIndex = 0;
     private float spawnYOffset = 0f; // keeps track of Y increment
 
@@ -27,6 +30,7 @@ public class ConeLandChecking : MonoBehaviour
             Debug.Log("A cone entered the trigger!");
             
             AddConeOnDuke(other.gameObject);
+            scoreSfx.Play();
             Destroy(other.gameObject);
         }
     }
