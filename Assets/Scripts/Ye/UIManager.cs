@@ -29,7 +29,7 @@ public class UIManager : MonoBehaviour
     public List<TMP_Text> playersScore;
     public Slider GameStartProgress360;
 
-    public List<Material> PlayerOutlines;
+    public List<Material> PlayerMarkColors;
 
 
     //When game ends
@@ -72,10 +72,10 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < playerNumbers; i++)
         {
-            //var rend = GameManager.instance.players[i].transform.GetChild(0).GetComponent<MeshRenderer>();
-            //var mats = rend.materials;   
-            //mats[1] = PlayerOutlines[i]; 
-            //rend.materials = mats;
+            var rend = GameManager.instance.players[i].transform.GetChild(0).GetComponent<MeshRenderer>();
+            var mat = rend.material;
+            mat = PlayerMarkColors[i];
+            rend.material = mat;
 
             //GameManager.instance.players[i].transform.GetChild(0).GetComponent<MeshRenderer>().materials[1] = PlayerOutlines[i];
 
