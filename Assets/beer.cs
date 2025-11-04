@@ -57,8 +57,11 @@ public class beer : MonoBehaviour
         // --- Spawn bubbles effect ---
         if (beerBubblesPrefab != null)
         {
-            beerBubblesInstance = Instantiate(beerBubblesPrefab, player.transform);
+            GameObject instance = Instantiate(beerBubblesPrefab.gameObject, player.transform);
+            beerBubblesInstance = instance.GetComponent<ParticleSystem>();
+            instance.transform.localPosition = new Vector3(0, 2f, 0);
             beerBubblesInstance.Play();
+      
         }
 
         // --- Tint player ---
