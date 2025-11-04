@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -22,7 +23,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public static GameState CurrentState = GameState.PreGame;
     public WeatherType currentWeather = WeatherType.Rain;
-    public ParticleSystem rainParticles;
+    private ParticleSystem rainParticles;
+    public ParticleSystem rainParticlesPrefab;
 
     [Header("Weather Forces")]
     public Vector3 windDirection = new Vector3(1f, 0f, 0f);
@@ -33,6 +35,11 @@ public class GameManager : MonoBehaviour
     public Vector3 windAreaSize = new Vector3(30f, 10f, 30f); // spawn area
     public float windDuration;
     private Coroutine windCoroutine;
+    private Coroutine weatherChangeRoutine;
+
+    private bool hasWeatherStarted = false;
+
+    public GameObject timer;
 
 
     public List<CharacterController> players;
@@ -105,8 +112,6 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        //Add ConeSpawer
-        // Start Timer
         GameManager.CurrentState = GameState.MainGame;
     }
 
@@ -123,11 +128,43 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (currentWeather == WeatherType.Rain && !rainParticles.isPlaying)
-            rainParticles.Play();
-        else if (currentWeather != WeatherType.Rain && rainParticles.isPlaying)
-            rainParticles.Stop();
-        else if (currentWeather == WeatherType.Wind && windCoroutine == null)
+        HandleRainState();
+        HandleWindState();
+
+        // --- Start weather randomization when 60 seconds remain ---
+        if (!hasWeatherStarted && TimerWithTMPro.currentTime <= 60f)
+        {
+            hasWeatherStarted = true;
+            StartWeatherSystem();
+        }
+    }
+    private void HandleRainState()
+    {
+        if (currentWeather == WeatherType.Rain)
+        {
+            // Instantiate rain if it doesn't exist yet
+            if (rainParticles == null && rainParticlesPrefab != null)
+            {
+                rainParticles = Instantiate(rainParticlesPrefab, transform);
+            }
+
+            if (rainParticles != null && !rainParticles.isPlaying)
+            {
+                rainParticles.Play();
+            }
+        }
+        else
+        {
+            if (rainParticles != null && rainParticles.isPlaying)
+            {
+                rainParticles.Stop();
+            }
+        }
+    }
+
+    private void HandleWindState()
+    {
+        if (currentWeather == WeatherType.Wind && windCoroutine == null)
         {
             windCoroutine = StartCoroutine(WindTrailRoutine());
         }
@@ -136,6 +173,33 @@ public class GameManager : MonoBehaviour
             StopCoroutine(windCoroutine);
             windCoroutine = null;
         }
+    }
+
+    private void StartWeatherSystem()
+    {
+        // Step 1: choose Rain or Wind randomly
+        currentWeather = (UnityEngine.Random.value < 0.5f) ? WeatherType.Rain : WeatherType.Wind;
+        ApplyWeather();
+
+        // Step 2: start periodic randomizer
+        weatherChangeRoutine = StartCoroutine(WeatherRandomizerRoutine());
+    }
+
+    private IEnumerator WeatherRandomizerRoutine()
+    {
+        while (TimerWithTMPro.currentTime > 0f)
+        {
+            yield return new WaitForSeconds(15f);
+            currentWeather = (WeatherType)UnityEngine.Random.Range(0, 3);
+            ApplyWeather();
+        }
+    }
+
+    private void ApplyWeather()
+    {
+        HandleRainState();
+        HandleWindState();
+        Debug.Log($"Weather changed to: {currentWeather}");
     }
 
     IEnumerator WindTrailRoutine()

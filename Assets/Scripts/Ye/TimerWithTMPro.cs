@@ -7,7 +7,7 @@ public class TimerWithTMPro : MonoBehaviour
     public float totalTime = 60f;
     public TMP_Text timerText;
 
-    private float currentTime;
+    public static float currentTime;
     private bool isTimerRunning = false;
 
     void Start()
