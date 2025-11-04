@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeather: 2
-  rainParticles: {fileID: 0}
+  rainParticles: {fileID: 7752718034436889970, guid: 2d7ae3b77cbf67d49b83e998d4c1d29d, type: 3}
   windDirection: {x: 1, y: -0.1, z: 0}
   windForce: 3
   rainForce: 3

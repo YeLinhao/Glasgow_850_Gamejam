@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,11 +9,17 @@ public class PlayerInputManager : MonoBehaviour
 
     public static PlayerInputManager instance;
 
-
     private HashSet<Gamepad> joinedGamepads = new HashSet<Gamepad>();
+    private HashSet<string> joinedKeyboardSchemes = new HashSet<string>();
 
-    private bool wasdJoined = false;
-
+    // Define keyboard join keys and control schemes
+    private (Key key, string scheme)[] keyboardJoinSchemes = new (Key, string)[]
+    {
+        (Key.C, "WASD"),
+        (Key.RightShift, "ArrowKeys"),
+        (Key.G, "5RTY"),
+        (Key.Period, "IJKL")
+    };
 
     private void Awake()
     {
@@ -23,54 +28,72 @@ public class PlayerInputManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
     }
-    // Update is called once per frame
+
     void Update()
     {
-        if (GameManager.CurrentState == GameManager.GameState.PreGame)
+        if (GameManager.CurrentState != GameManager.GameState.PreGame)
+            return;
+
+        // --- Handle keyboard joins ---
+        foreach (var (key, scheme) in keyboardJoinSchemes)
         {
-            if (Keyboard.current == null) return;
-            if (!wasdJoined && Keyboard.current.enterKey.wasPressedThisFrame)
+            if (!joinedKeyboardSchemes.Contains(scheme) && Keyboard.current[key].wasPressedThisFrame)
             {
-                var player = PlayerInput.Instantiate(playerPrefab,
-                        controlScheme: "WASD",
-                        pairWithDevice: Keyboard.current);
-
-                if (spawnPoints.Length > 0)
-                {
-                    // Get the CharacterController component
-                    CharacterController controller = player.GetComponent<CharacterController>();
-                    GameManager.instance.AddPlayer(controller);
-                    // Place the player at the spawn point
-                    controller.enabled = false; // temporarily disable to safely set position
-                    player.transform.position = spawnPoints[joinedGamepads.Count].position;
-                    controller.enabled = true; // re-enable before using Move
-                }
-                wasdJoined = true;
+                JoinKeyboardPlayer(scheme);
             }
-            foreach (var gamePad in Gamepad.all)
+        }
+      
+
+        // --- Handle gamepad joins ---
+        foreach (var gamePad in Gamepad.all)
+        {
+            if (gamePad.buttonSouth.wasPressedThisFrame && !joinedGamepads.Contains(gamePad))
             {
-                if (gamePad.buttonSouth.wasPressedThisFrame && !joinedGamepads.Contains(gamePad))
-                {
-                    var player = PlayerInput.Instantiate(playerPrefab,
-                        controlScheme: "Gamepad",
-                        pairWithDevice: gamePad);
-
-
-                    if (spawnPoints.Length > 0)
-                    {
-                        // Get the CharacterController component
-                        CharacterController controller = player.GetComponent<CharacterController>();
-                        GameManager.instance.AddPlayer(controller);
-
-                        // Place the player at the spawn point
-                        controller.enabled = false; // temporarily disable to safely set position
-                        player.transform.position = spawnPoints[joinedGamepads.Count].position;
-                        controller.enabled = true; // re-enable before using Move
-                    }
-                    joinedGamepads.Add(gamePad);
-                }
+                JoinGamepadPlayer(gamePad);
             }
+        }
+    }
+
+    private void JoinKeyboardPlayer(string controlScheme)
+    {
+        Debug.Log(controlScheme);
+        var player = PlayerInput.Instantiate(playerPrefab,
+            controlScheme: controlScheme,
+            pairWithDevice: Keyboard.current);
+
+        AssignSpawnPoint(player, joinedGamepads.Count + joinedKeyboardSchemes.Count);
+        joinedKeyboardSchemes.Add(controlScheme);
+        Debug.Log(player.currentControlScheme);
+    }
+
+    private void JoinGamepadPlayer(Gamepad gamePad)
+    {
+        var player = PlayerInput.Instantiate(playerPrefab,
+            controlScheme: "Gamepad",
+            pairWithDevice: gamePad);
+
+        AssignSpawnPoint(player, joinedGamepads.Count + joinedKeyboardSchemes.Count);
+        joinedGamepads.Add(gamePad);
+    }
+
+    private void AssignSpawnPoint(PlayerInput player, int index)
+    {
+        if (spawnPoints.Length == 0) return;
+
+        var spawnIndex = Mathf.Clamp(index, 0, spawnPoints.Length - 1);
+        var controller = player.GetComponent<CharacterController>();
+
+        if (controller != null)
+        {
+            GameManager.instance.AddPlayer(controller);
+            controller.enabled = false;
+            player.transform.position = spawnPoints[spawnIndex].position;
+            controller.enabled = true;
         }
     }
 
@@ -78,29 +101,26 @@ public class PlayerInputManager : MonoBehaviour
     {
         if (player == null) return;
 
-        // --- 1. Unpair the device(s) ---
-        var devices = player.devices;
-        foreach (var device in devices)
+        foreach (var device in player.devices)
         {
             if (device is Gamepad gamepad)
             {
-                // Remove the gamepad from joined set
                 joinedGamepads.Remove(gamepad);
             }
             else if (device is Keyboard)
             {
-                wasdJoined = false;
+                // Find which scheme this player used
+                var scheme = player.currentControlScheme;
+                joinedKeyboardSchemes.Remove(scheme);
             }
         }
 
-        // --- 2. Remove the player from the GameManager list ---
         var controller = player.GetComponent<CharacterController>();
         if (controller != null)
         {
             GameManager.instance.RemovePlayer(controller);
         }
 
-        // --- 3. Destroy the player object ---
         Destroy(player.gameObject);
     }
 }
