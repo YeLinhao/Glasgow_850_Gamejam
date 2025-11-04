@@ -47,8 +47,10 @@ MonoBehaviour:
   orangeConePrefab: {fileID: 2306888168226763931, guid: b047951c28f67fc429d7ee65a58ac4c5, type: 3}
   blueConePrefab: {fileID: 2306888168226763931, guid: 43b1c6e5ec9bb004fb14e68e364af6f6, type: 3}
   greenConePrefab: {fileID: 2306888168226763931, guid: 3ff3bc0103103e14d87b04c920963987, type: 3}
-  spawnInterval: 5
-  maxCones: 3
+  IrnBruPrefab: {fileID: 7154543723320354354, guid: 084a71cd34aa5b145ab7d65025d2bf73, type: 3}
+  BeerPrefab: {fileID: 3852303833581284048, guid: 4b852041f75af884c81c248df4873402, type: 3}
+  spawnInterval: 3.5
+  itemSpawnInterval: 10
   spawnRange: 22
   minDistanceFromOrigin: 4
   spawnY: 1

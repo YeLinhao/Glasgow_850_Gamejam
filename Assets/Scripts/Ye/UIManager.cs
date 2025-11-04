@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+      
         }
     }
 
@@ -114,8 +114,10 @@ public class UIManager : MonoBehaviour
 
     public void Scene_Restart()
     {
-        SceneManager.LoadScene(1);
         GameManager.CurrentState = GameManager.GameState.PreGame;
+        SceneManager.LoadScene(1);
+        
+        Debug.Log(GameManager.CurrentState.ToString());
     }
 
     public void Scene_BackMenu()

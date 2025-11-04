@@ -12,7 +12,7 @@ public class ConeSpawner : MonoBehaviour
     [SerializeField] private GameObject BeerPrefab;
     [SerializeField] private float spawnInterval = 2f;
     [SerializeField] private float itemSpawnInterval = 10f;
-    [SerializeField] private int maxCones = 3;
+    private int maxCones = 3;
     [SerializeField] private float spawnRange = 10f;
     [SerializeField] private float minDistanceFromOrigin = 2f;
     [SerializeField] private float spawnY = 1f;
@@ -118,8 +118,10 @@ public class ConeSpawner : MonoBehaviour
     {
         if (GameManager.CurrentState == GameManager.GameState.MainGame && spawnStarted == false)
         {
+            maxCones = GameManager.instance.players.Count + 1;
             StartCoroutine(SpawnRoutine());
             spawnStarted = true;
+
         }
         if (TimerWithTMPro.currentTime <= 70 && itemSpawnStarted == false)
         {

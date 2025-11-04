@@ -9,11 +9,9 @@ public class IrnBru : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-
-
+        transform.Rotate(Vector3.up, spinSpeed * Time.deltaTime, Space.Self);
     }
 
     public float enlargeMultiplier = 3f;
@@ -22,6 +20,7 @@ public class IrnBru : MonoBehaviour
     public GameObject IrnBruPic;
 
     private bool hasTriggered = false;
+    [SerializeField] private float spinSpeed = 90f;
 
 
     private void OnTriggerEnter(Collider other)

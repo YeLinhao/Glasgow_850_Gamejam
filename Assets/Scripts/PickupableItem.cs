@@ -15,6 +15,7 @@ public class PickupableItem : MonoBehaviour, IPickupable
     [SerializeField] private float fadeSpeed = 2f;      // how fast trail length/width interpolates
     [SerializeField] private float maxTrailWidth = 0.5f; // maximum trail width
     private float defaultTrailTime;
+    private bool isHeld = false;
 
     private void Awake()
     {
@@ -57,6 +58,9 @@ public class PickupableItem : MonoBehaviour, IPickupable
 
     public void OnPickup(Transform holdParent, CharacterController player)
     {
+        if (isHeld == true){
+            return;
+        }
         rb.isKinematic = true;
         col.enabled = false;
 
@@ -67,14 +71,17 @@ public class PickupableItem : MonoBehaviour, IPickupable
         transform.localRotation = Quaternion.identity;
 
         Debug.Log($"Picked up {name}");
+        isHeld = true;
     }
 
     public void OnDrop(Vector3 throwForce)
     {
+        if (isHeld==false){ return; }
         transform.SetParent(null);
         rb.isKinematic = false;
         col.enabled = true;
         rb.AddForce(throwForce, ForceMode.Impulse);
+        isHeld = false;
     }
 
     private void OnCollisionEnter(Collision collision)

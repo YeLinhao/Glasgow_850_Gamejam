@@ -23,7 +23,9 @@ public class beer : MonoBehaviour
 
     private Renderer renderer;
 
+    [SerializeField] private float spinSpeed = 90f;
 
+        
     private void OnTriggerEnter(Collider other)
     {
         if (!hasTriggered && other.CompareTag("Player"))
@@ -69,14 +71,8 @@ public class beer : MonoBehaviour
             renderer.material.color = drunkTint;
 
         // --- Enable drunk state ---
-        bool hadDrunkField = false;
-        var playerType = player.GetType();
-        var drunkField = playerType.GetField("isDrunk");
-        if (drunkField != null)
-        {
-            drunkField.SetValue(player, true);
-            hadDrunkField = true;
-        }
+        player.GetComponent<PlayerController>().isDrunk = true;
+       
 
         float elapsed = 0f;
         Debug.Log("Player is drunk!");
@@ -120,10 +116,13 @@ public class beer : MonoBehaviour
         if (renderer != null)
             renderer.material.color = originalColor;
 
-        if (hadDrunkField)
-            drunkField.SetValue(player, false);
+        player.GetComponent<PlayerController>().isDrunk = false;
 
         Debug.Log("Player sobered up.");
         Destroy(gameObject);
+    }
+    private void Update()
+    {
+        transform.Rotate(Vector3.up, spinSpeed * Time.deltaTime, Space.World);
     }
 }

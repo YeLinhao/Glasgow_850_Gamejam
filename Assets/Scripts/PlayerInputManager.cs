@@ -9,8 +9,8 @@ public class PlayerInputManager : MonoBehaviour
 
     public static PlayerInputManager instance;
 
-    private HashSet<Gamepad> joinedGamepads = new HashSet<Gamepad>();
-    private HashSet<string> joinedKeyboardSchemes = new HashSet<string>();
+    private HashSet<Gamepad> joinedGamepads;
+    private HashSet<string> joinedKeyboardSchemes;
 
     // Define keyboard join keys and control schemes
     private (Key key, string scheme)[] keyboardJoinSchemes = new (Key, string)[]
@@ -26,12 +26,14 @@ public class PlayerInputManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+        
         }
         else if (instance != this)
         {
             Destroy(gameObject);
         }
+        joinedGamepads = new HashSet<Gamepad>();
+        joinedKeyboardSchemes = new HashSet<string>();
     }
 
     void Update()

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
 public class ConeLandChecking : MonoBehaviour
@@ -80,6 +81,12 @@ public class ConeLandChecking : MonoBehaviour
         spawnYOffset += 0.2f; // increment Y for next spawn
 
         // Instantiate the cone
+        var player = destroyedCone.gameObject.GetComponent<PickupableItem>().owner;
+        if (player.GetComponent<PlayerController>().isDrunk == true)
+        {
+            score = score * 2;
+        }
+        
         GameManager.instance.addScore(destroyedCone.gameObject.GetComponent<PickupableItem>().owner, score);
         Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
 
