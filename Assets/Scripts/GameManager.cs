@@ -61,6 +61,10 @@ public class GameManager : MonoBehaviour
         playerLookup[newPlayer] = playerName;
         playerScores[newPlayer] = 0;
 
+
+        //Spawn Sfx
+        newPlayer.GetComponent<PlayerAudioControl>().spawnSounds.Play();
+
         //Show playerUI
         UIManager.Instance.UI_UpdatePersonalScoreBoards(players.Count);
         UIManager.Instance.UI_UpdatePlayerColor(players.Count);
@@ -73,7 +77,6 @@ public class GameManager : MonoBehaviour
     {
         if (playerLookup.ContainsKey(player))
             playerLookup.Remove(player);
-        
 
         players.Remove(player);
         UIManager.Instance.UI_UpdatePersonalScoreBoards(players.Count);
