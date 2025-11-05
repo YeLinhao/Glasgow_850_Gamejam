@@ -92,6 +92,7 @@ public class PickupableItem : MonoBehaviour, IPickupable
             {
                 ContactPoint contact = collision.contacts[0];
                 GameObject particles = Instantiate(impactParticlesPrefab, contact.point, Quaternion.LookRotation(contact.normal));
+                this.GetComponent<AudioSource>().Play();
                 Destroy(particles, 2f);
             }
         }

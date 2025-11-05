@@ -32,7 +32,7 @@ public class beer : MonoBehaviour
         {
             hasTriggered = true;
             
-            //GetComponent<AudioSource>()?.Play();
+            GetComponent<AudioSource>()?.Play();
 
             StartCoroutine(DrunkEffectRoutine(other.gameObject));
             beerModel.SetActive(false);

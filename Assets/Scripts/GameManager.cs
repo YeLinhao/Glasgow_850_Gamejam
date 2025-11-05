@@ -28,6 +28,12 @@ public class GameManager : MonoBehaviour
     private ParticleSystem rainParticles;
     public ParticleSystem rainParticlesPrefab;
 
+    [Header("Audio Sources")]
+    [SerializeField] private AudioSource windAudio;
+    [SerializeField] private AudioSource rainAudio;
+    [SerializeField] private float fadeDuration = 2f;   // seconds for fade-in
+    [SerializeField] private float targetVolume = 0.5f; // max volume after fade
+
     [Header("Weather Forces")]
     public Vector3 windDirection = new Vector3(1f, 0f, 0f);
     public float windForce = 0.5f;
@@ -158,13 +164,22 @@ public class GameManager : MonoBehaviour
             if (rainParticles != null && !rainParticles.isPlaying)
             {
                 rainParticles.Play();
+
             }
+
+            if (!rainAudio.isPlaying)
+            {
+                rainAudio.volume = 0f;
+                rainAudio.Play();
+            }
+            StartCoroutine(FadeInAudio(rainAudio));
         }
         else
         {
             if (rainParticles != null && rainParticles.isPlaying)
             {
                 rainParticles.Stop();
+                StartCoroutine(FadeOutAudio(rainAudio));
             }
         }
     }
@@ -174,11 +189,20 @@ public class GameManager : MonoBehaviour
         if (currentWeather == WeatherType.Wind && windCoroutine == null)
         {
             windCoroutine = StartCoroutine(WindTrailRoutine());
+
+            if (!windAudio.isPlaying)
+            {
+                windAudio.volume = 0f;
+                windAudio.Play();
+            }
+            StartCoroutine(FadeInAudio(windAudio));
+
         }
         else if (currentWeather != WeatherType.Wind && windCoroutine != null)
         {
             StopCoroutine(windCoroutine);
             windCoroutine = null;
+            StartCoroutine(FadeOutAudio(windAudio));
         }
     }
 
@@ -243,6 +267,37 @@ public class GameManager : MonoBehaviour
         }
 
         rb.linearVelocity = windDirection.normalized * (windForce * 10f);
+    }
+
+    private IEnumerator FadeInAudio(AudioSource audioSource)
+    {
+        float startVolume = audioSource.volume;
+        float time = 0f;
+
+        while (time < fadeDuration)
+        {
+            time += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, time / fadeDuration);
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
+    }
+
+    public IEnumerator FadeOutAudio(AudioSource audioSource)
+    {
+        float startVolume = audioSource.volume;
+        float time = 0f;
+
+        while (time < fadeDuration)
+        {
+            time += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, 0f, time / fadeDuration);
+            yield return null;
+        }
+
+        audioSource.volume = 0f;
+        audioSource.Stop();
     }
 
 
