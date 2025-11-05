@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &9716279 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1041312704115752734, guid: 849644b2d38fddc4582969e427414354, type: 3}
+  m_PrefabInstance: {fileID: 581930296}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &62152084
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,6 +1092,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1041312704115752734, guid: 849644b2d38fddc4582969e427414354, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3525133024969000236, guid: 849644b2d38fddc4582969e427414354, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1127,9 +1136,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6437101866121120399, guid: 849644b2d38fddc4582969e427414354, type: 3}
+      propertyPath: restartButton
+      value: 
+      objectReference: {fileID: 9716279}
+    - target: {fileID: 6437101866121120399, guid: 849644b2d38fddc4582969e427414354, type: 3}
+      propertyPath: mainMenuButton
+      value: 
+      objectReference: {fileID: 1408875985}
     - target: {fileID: 7022780521523811097, guid: 849644b2d38fddc4582969e427414354, type: 3}
       propertyPath: m_Name
       value: TimeNScoreSystem-ylh1222_1104
+      objectReference: {fileID: 0}
+    - target: {fileID: 8310156296174186790, guid: 849644b2d38fddc4582969e427414354, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2404,6 +2425,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 0ee37198b24b2164fbbccfbe92fe5d35, type: 3}
   m_PrefabInstance: {fileID: 719641581}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1408875985 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8310156296174186790, guid: 849644b2d38fddc4582969e427414354, type: 3}
+  m_PrefabInstance: {fileID: 581930296}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1419532871
 PrefabInstance:

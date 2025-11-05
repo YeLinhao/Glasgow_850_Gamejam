@@ -1,9 +1,11 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -137,6 +139,10 @@ public class GameManager : MonoBehaviour
         {
             hasWeatherStarted = true;
             StartWeatherSystem();
+        }
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            SceneManager.LoadScene("Menu");
         }
     }
     private void HandleRainState()

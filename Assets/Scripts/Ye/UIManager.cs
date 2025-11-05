@@ -1,9 +1,10 @@
-using UnityEngine;
-using UnityEngine.UI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class UIManager : MonoBehaviour
     }
 
     public GameObject LeaderboardPanel;
+    [SerializeField] private GameObject mainMenuButton;
+    [SerializeField] private GameObject restartButton;
     public TMP_Text FirstPlace_Score;
     public TMP_Text SecondPlace_Score;
     public TMP_Text ThirdPlace_Score;
@@ -33,11 +36,14 @@ public class UIManager : MonoBehaviour
     public List<RawImage> ScoreboardImages;
     public List<RenderTexture> Player_3D_RenderTextures;
 
+    private float buttonDelay = 2f;
+
 
     //When game ends
     public void UI_EnableLeaderboard()
     {
         LeaderboardPanel.SetActive(true);
+        StartCoroutine(ShowButtonsWithDelay());
 
         Debug.Log("PLAYER NUM: " + GameManager.instance.GetTop3Players().Count);
 
@@ -57,6 +63,15 @@ public class UIManager : MonoBehaviour
             ScoreboardImages[2].texture = Player_3D_RenderTextures[GameManager.instance.players.IndexOf(GameManager.instance.GetTop3Players()[2].Key)];
         }
    
+    }
+    private IEnumerator ShowButtonsWithDelay()
+    {
+        // Wait for 2 seconds
+        yield return new WaitForSeconds(buttonDelay);
+
+        // Then show the buttons
+        mainMenuButton.SetActive(true);
+        restartButton.SetActive(true);
     }
 
     //When prepare stage, player join/quit
